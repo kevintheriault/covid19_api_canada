@@ -13,6 +13,9 @@ services:
       - "5555:5555"
     environment:
       DB_PW: ${EXP_PW}
+      VIRTUAL_HOST: www.covid.kevintheriault.tech
+      LETSENCRPYT_HOST: www.covid.kevintheriault.tech
+      LETSENCRYPT_EMAIL: kevin.theriault@live.com
 
   mongo:
     image: mongo
