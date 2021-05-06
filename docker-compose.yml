@@ -8,12 +8,16 @@ services:
      - 80
     restart: always
     environment:
-      VIRTUAL_HOST: www.api.kevintheriault.tech
-      LETSENCRYPT_HOST: www.api.kevintheriault.tech
+      VIRTUAL_HOST: www.api.kevintheriault.tech,api.kevintheriault.tech
+      LETSENCRYPT_HOST: www.api.kevintheriault.tech,api.kevintheriault.tech
       LETSENCRYPT_EMAIL: kevin.theriault@live.com
+      
     container_name: server_api
     depends_on: 
       - nodejs_api
+    volumes:
+      - ./nginx-conf:/etc/nginx/conf.d
+    
 
   nodejs_api:
     build:
@@ -21,7 +25,7 @@ services:
       dockerfile: Dockerfile
     image: nodejs
     expose:
-      - 8080
+      - 80
     container_name: nodejs_api
     restart: unless-stopped
     env_file: .env
