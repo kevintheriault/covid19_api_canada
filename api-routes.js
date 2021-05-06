@@ -2,7 +2,7 @@
 const router = require('express').Router();
 const dataControl = require('./dataControl');
 
-// security
+// security using AUTH0
 const jwt = require('express-jwt');
 const jwksRsa = require('jwks-rsa');
 const checkJwt = jwt({
@@ -21,11 +21,12 @@ const checkJwt = jwt({
 // Set default API response
 router.get('/', (dataControl.index))
 
-// ADMIN REQUIRES AUTHENTICATION
+// ADMIN REQUIRES AUTHENTICATION (calls auth0 function checkJwt)
 router.route('/admin')
     .get(checkJwt, dataControl.admin)
     .post(checkJwt, dataControl.new)
 
+// ADMIN REQUIRES AUTHENTICATION -- specific items by day
 router.route('/admin/:date')
     .delete(checkJwt, dataControl.delete)
     .patch(checkJwt, dataControl.update)

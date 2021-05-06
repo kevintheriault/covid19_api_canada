@@ -2,9 +2,11 @@
 const Data = require('./dataModel');
 const _ = require('lodash');
 
-// View all data
+// View all data on the index.
 exports.index = function (req, res) { 
     Data.get(function (err, data) {
+
+        // format data before presenting it to be sorted by 'date' using LODASH
         const formatData = _.sortBy(data, 'date');
         if (err) {
             res.json({
@@ -14,13 +16,13 @@ exports.index = function (req, res) {
         }else{
             res.json({
                 message: "Data successfully retrieved",
-                data: formatData
+                data: formatData  //show formatted (sorted) data
             })
         }  
     });  
 };
 
-// Adding data to the database.
+// Adding a single data item to the database using forms (req.body).
 exports.new = function (req, res) {
     let data = new Data();
 
@@ -52,19 +54,23 @@ exports.new = function (req, res) {
 
 // View specific LOCATION data.
 exports.view = function (req, res) {
+
+    // find 'location' where it equals the 'param' request. ie /api/Canada Canada is the param
     Data.find({location: req.params.location }, function (err, data) {
+
+        // sort data using LODASH
         const formatData = _.sortBy(data, 'date');
         if (err){
             res.send(err);
         }
         res.json({
-            message: 'Retrieved specific dataset: ',
-            data: formatData
+            message: 'Retrieved specific data for: ' + req.params.location,
+            data: formatData //display sorted data
         });
     });
 };
 
-// Updated specific date data
+// Update specific data by date param.  ie. api/admin/2020-01-01 param to update is '2020-01-01'
 exports.update = function (req, res) {
     Data.find({date: req.params.date}, function (err, data) {
             if (err) {
@@ -90,7 +96,7 @@ exports.update = function (req, res) {
                     res.json(err);
                 }else{
                     res.json({
-                        message: 'Date dataset updated',
+                        message: 'Data for ' + req.params.date + ' updated',
                         data: data
                     });
                 }
@@ -98,7 +104,7 @@ exports.update = function (req, res) {
         });
     };
 
-    // Delete data
+    // Delete data by date param ie. api/admin/2020-01-01 2020-01-01 = param
 exports.delete = function (req, res) {
     Data.remove({date: req.params.date
     }, function (err, data) {
@@ -107,28 +113,25 @@ exports.delete = function (req, res) {
         }else{            
             res.json({
                 status: "Success",
-                message: "Data deleted"
+                message: "Data for: " + req.params.date + " deleted"
             });
         }
     });
 };
 
 
-// admin
+// admin index.
+// TODO: Add form for posting data
+// TODO: Add delete functionality
+// TODO: Add update functionality.
+
 exports.admin = function (req, res) { 
-    Data.get(function (err, data) {
-        const formatData = _.sortBy(data, 'date');
-        if (err) {
-            res.json({
-                status: "Error",
-                message: err
-            });
-        }else{
-            res.json({
-                message: "Data successfully retrieved",
-                data: formatData
-            })
-        }  
-    });  
+    res.send(`
+        <h1>Add data to the API<h1>
+        <form action="admin/api/post" enctype="multipart/form-data" method="post">
+            <div>Date: <input type="text" name="date" /></div>
+            <input type="submit" value="POST" />
+        </form>
+    `);
 };
 
