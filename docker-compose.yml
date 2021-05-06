@@ -1,6 +1,18 @@
 version: '3'
 
 services:
+
+  api_web_server:
+    image: nginx:alpine
+    expose:
+     - 80
+    restart: always
+    environment:
+      VIRTUAL_HOST: www.api.kevintheriault.tech
+      LETSENCRYPT_HOST: www.api.kevintheriault.tech
+      LETSENCRYPT_EMAIL: kevin.theriault@live.com
+    container_name: covid_api
+
   nodejs:
     build:
       context: .
@@ -9,8 +21,6 @@ services:
     container_name: nodejs_cov
     restart: unless-stopped
     env_file: .env
-    expose:
-     - 80
     environment:
       DB_PW: ${EXP_PW}
       VIRTUAL_HOST: www.api.kevintheriault.tech
@@ -20,6 +30,7 @@ services:
   mongo:
     image: mongo
     restart: always
+    container_name: cov_mongo
     environment:
       MONGO_INITDB_ROOT_USERNAME: root
       MONGO_INITDB_ROOT_PASSWORD: ${EXP_PW}
