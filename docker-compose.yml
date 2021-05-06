@@ -1,4 +1,4 @@
-version: '3.1'
+version: '3'
 
 services:
   nodejs:
@@ -10,11 +10,11 @@ services:
     restart: unless-stopped
     env_file: .env
     expose:
-     - 8080
+     - 80
     environment:
       DB_PW: ${EXP_PW}
-      VIRTUAL_HOST: www.covid.kevintheriault.tech
-      LETSENCRPYT_HOST: www.covid.kevintheriault.tech
+      VIRTUAL_HOST: www.api.kevintheriault.tech
+      LETSENCRPYT_HOST: www.api.kevintheriault.tech
       LETSENCRYPT_EMAIL: kevin.theriault@live.com
 
   mongo:
@@ -27,9 +27,6 @@ services:
      - 27017
     volumes: 
      - mongoAPI:/data/db
-
-
-
 
 volumes:
   mongoAPI:

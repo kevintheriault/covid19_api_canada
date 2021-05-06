@@ -11,7 +11,7 @@ require('dotenv').config();
 
 // Initialize Server
 app = express();
-const port = process.env.PORT || 8080;
+const port = process.env.PORT || 80;
 
 app.use(helmet());
 app.use(cors());
