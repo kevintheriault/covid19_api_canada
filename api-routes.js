@@ -23,8 +23,8 @@ router.get('/', (dataControl.index))
 
 // ADMIN REQUIRES AUTHENTICATION (calls auth0 function checkJwt)
 router.route('/admin')
-    .get(checkJwt, dataControl.admin)
-    .post(checkJwt, dataControl.new)
+    .get(dataControl.admin)
+    // .post(checkJwt, dataControl.new)
 
 // ADMIN REQUIRES AUTHENTICATION -- specific items by day
 router.route('/admin/:date')
