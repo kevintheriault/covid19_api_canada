@@ -28,7 +28,7 @@ app.use(express.json());
 
 // Connect to server with mongoose
 const pw = process.env.EXP_PW;
-mongoose.connect('mongodb://root:' + pw + '@api_node_mongo_1:27017', { useNewUrlParser: true}, { useUnifiedTopology: true });
+mongoose.connect('mongodb://root:' + pw + '@mongo_api:27017', { useNewUrlParser: true}, { useUnifiedTopology: true });
 const db = mongoose.connection;
 
 // used for development
