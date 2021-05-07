@@ -30,7 +30,7 @@ router.route('/admin/post')
 
 // ADMIN REQUIRES AUTHENTICATION -- specific items by day
 router.route('/admin/:date')
-    .delete(checkJwt, dataControl.delete)
+    .delete(dataControl.delete)
     .patch(checkJwt, dataControl.update)
 
     // Get specific location data

@@ -23,6 +23,7 @@
     "momentjs": "^2.0.0",
     "mongoose": "^5.12.7",
     "mongoose-sequence": "^5.3.1",
-    "morgan": "^1.10.0"
+    "morgan": "^1.10.0",
+    "node-cron": "^3.0.0"
   }
 }

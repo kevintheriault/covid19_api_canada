@@ -24,10 +24,12 @@ exports.index = function (req, res) {
     });  
 };
 
-exports.add_from_opencovid = async function (req, res) {
+exports.add_from_opencovid_p = async function (req, res) {
     
     try { 
-        let response = await axios.get('https://api.opencovid.ca/summary');
+        let response = await axios.get('https://api.opencovid.ca/summary?ymd=true');
+
+        console.log('Received todays provincial data.')
 
         for(let i = 0; i < response.data.summary.length; i++){
             var data = new Data();
@@ -35,8 +37,6 @@ exports.add_from_opencovid = async function (req, res) {
                 data.date = null;
             }else{
                 data.date = moment(response.data.summary[i].date).format('YYYY-MM-DD');
-
-                console.log(data.date);
             }
             if(response.data.summary[i].active_cases == "NULL"){
                 data.active_cases = null;
@@ -100,7 +100,90 @@ exports.add_from_opencovid = async function (req, res) {
             }
 
             data.save();
-            } 
+            }
+        console.log('Todays provincial data updated.') 
+    } catch (err) {
+        console.error(err);
+    }}, error => {
+            console.log(error);
+}
+
+exports.add_from_opencovid_n = async function (req, res) {
+    
+    try { 
+        let response = await axios.get('https://api.opencovid.ca/summary?loc=canada&ymd=true');
+
+        console.log('Received national data.')
+            var data = new Data();
+            if(response.data.summary[0].date == "NULL"){
+                data.date = null;
+            }else{
+                data.date = moment(response.data.summary[0].date).format('YYYY-MM-DD');
+            }
+            if(response.data.summary[0].active_cases == "NULL"){
+                data.active_cases = null;
+            }else{
+            data.active_cases = response.data.summary[0].active_cases;
+            }
+            if(response.data.summary[0].active_cases_change == "NULL"){
+                data.active_cases_change = null;
+            }else{
+            data.active_cases_change = response.data.summary[0].active_cases_change;
+            }
+            if(response.data.summary[0].cases == "NULL"){
+                data.cases = null;
+            }else{
+            data.cases = response.data.summary[0].cases;
+            }
+            if(response.data.summary[0].cumulative_cases == "NULL"){
+                data.total_cases = null;
+            }else{
+            data.total_cases = response.data.summary[0].cumulative_cases;
+            }
+            if(response.data.summary[0].deaths == "NULL"){
+                data.deaths = null;
+            }else{
+            data.deaths = response.data.summary[0].deaths;
+            }
+            if(response.data.summary[0].cumulative_deaths == "NULL"){
+                data.total_deaths = null;
+            }else{
+            data.total_deaths = response.data.summary[0].cumulative_deaths;
+            }
+            if(response.data.summary[0].recovered == "NULL"){
+                data.recovered = null;
+            }else{
+            data.recovered = response.data.summary[0].recovered;
+            }
+            if(response.data.summary[0].cumulative_recovered == "NULL"){
+                data.total_recovered = null;
+            }else{
+            data.total_recovered = response.data.summary[0].cumulative_recovered;
+            }
+            if(response.data.summary[0].province == "NULL"){
+                data.location = null;
+            }else{
+            data.location = response.data.summary[0].province;
+            }
+            if(response.data.summary[0].avaccine == "NULL"){
+                data.vaccination_shots = null;
+            }else{
+            data.vaccination_shots = response.data.summary[0].avaccine;
+            }
+            if(response.data.summary[0].cumulative_avaccine == "NULL"){
+                data.total_vaccinations_1st = null;
+            }else{
+            data.total_vaccinations_1st = response.data.summary[0].cumulative_avaccine;
+            }
+            if(response.data.summary[0].cumulative_cvaccine == "NULL"){
+                data.completed_vaccinations = null;
+            }else{  
+            data.completed_vaccinations = response.data.summary[0].cumulative_cvaccine;
+            }
+
+            data.save();
+
+        console.log('Todays national data updated.') 
     } catch (err) {
         console.error(err);
     }}, error => {
@@ -211,27 +294,27 @@ exports.delete = function (req, res) {
 // TODO: Add delete functionality
 // TODO: Add update functionality.
 
-// exports.admin = function (req, res) { 
-//     res.send(`
-//         <h1>Add data to the API</h1>
-//         <form action="admin/post" enctype="multipart/form-data" method="post">
-//             <div>Date: <input type="text" name="date" /></div>
-//             <div>Active Cases: <input type="text" name="active_cases" /></div>
-//             <div>Change in Active: <input type="text" name="active_cases_change" /></div>
-//             <div>Cases: <input type="text" name="cases" /></div>
-//             <div>Total Cases: <input type="text" name="total_cases" /></div>
-//             <div>Deaths: <input type="text" name="deaths" /></div>
-//             <div>Total Deaths: <input type="text" name="total_deaths" /></div>
-//             <div>Recovered: <input type="text" name="recovered" /></div>
-//             <div>Total Recovered: <input type="text" name="total_recovered" /></div>
-//             <div>Location: <input type="text" name="location" /></div>
-//             <div>Vaccination Shots: <input type="text" name="vaccinations_shots" /></div>
-//             <div>Total 1st Shot Vaccination: <input type="text" name="total_vaccinations_1st" /></div>
-//             <div>Completed Vaccinations: <input type="text" name="completed_vaccinations" /></div>
+exports.admin = function (req, res) { 
+    res.send(`
+        <h1>Add data to the API</h1>
+        <form action="admin/post" enctype="multipart/form-data" method="post">
+            <div>Date: <input type="text" name="date" /></div>
+            <div>Active Cases: <input type="text" name="active_cases" /></div>
+            <div>Change in Active: <input type="text" name="active_cases_change" /></div>
+            <div>Cases: <input type="text" name="cases" /></div>
+            <div>Total Cases: <input type="text" name="total_cases" /></div>
+            <div>Deaths: <input type="text" name="deaths" /></div>
+            <div>Total Deaths: <input type="text" name="total_deaths" /></div>
+            <div>Recovered: <input type="text" name="recovered" /></div>
+            <div>Total Recovered: <input type="text" name="total_recovered" /></div>
+            <div>Location: <input type="text" name="location" /></div>
+            <div>Vaccination Shots: <input type="text" name="vaccinations_shots" /></div>
+            <div>Total 1st Shot Vaccination: <input type="text" name="total_vaccinations_1st" /></div>
+            <div>Completed Vaccinations: <input type="text" name="completed_vaccinations" /></div>
 
-//             <div>Access Token: <textarea name="token" rows="5" cols="50"></textarea></div>
+            <div>Access Token: <textarea name="token" rows="5" cols="50"></textarea></div>
 
-//             <input type="submit" value="POST" />
-//         </form>
-//     `);
-// };
+            <input type="submit" value="POST" />
+        </form>
+    `);
+};
