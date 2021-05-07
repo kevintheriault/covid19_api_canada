@@ -18,3 +18,12 @@ CRON-NODE is running updates to the database once a day for national and provinc
 I used lodash to sort the data for GET requests. -Data sorted in MongoDB was not maintaining their sorted-ness.
 
 To delete/update/post data you can use the /admin route with a token.
+
+Also available dockerized:
+
+https://hub.docker.com/repository/docker/theriake/cov_node_api
+
+Can quickly get an API server up and running using Docker-compose.
+
+I used nginx mongodb in Docker-compose to create the server.
+
