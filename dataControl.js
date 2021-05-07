@@ -1,6 +1,8 @@
 
 const Data = require('./dataModel');
 const _ = require('lodash');
+const axios = require('axios');
+const moment = require('moment');
 
 // View all data on the index.
 exports.index = function (req, res) { 
@@ -21,6 +23,89 @@ exports.index = function (req, res) {
         }  
     });  
 };
+
+exports.add_from_opencovid = async function (req, res) {
+    
+    try { 
+        let response = await axios.get('https://api.opencovid.ca/summary');
+
+        for(let i = 0; i < response.data.summary.length; i++){
+            var data = new Data();
+            if(response.data.summary[i].date == "NULL"){
+                data.date = null;
+            }else{
+                data.date = moment(response.data.summary[i].date).format('YYYY-MM-DD');
+
+                console.log(data.date);
+            }
+            if(response.data.summary[i].active_cases == "NULL"){
+                data.active_cases = null;
+            }else{
+            data.active_cases = response.data.summary[i].active_cases;
+            }
+            if(response.data.summary[i].active_cases_change == "NULL"){
+                data.active_cases_change = null;
+            }else{
+            data.active_cases_change = response.data.summary[i].active_cases_change;
+            }
+            if(response.data.summary[i].cases == "NULL"){
+                data.cases = null;
+            }else{
+            data.cases = response.data.summary[i].cases;
+            }
+            if(response.data.summary[i].cumulative_cases == "NULL"){
+                data.total_cases = null;
+            }else{
+            data.total_cases = response.data.summary[i].cumulative_cases;
+            }
+            if(response.data.summary[i].deaths == "NULL"){
+                data.deaths = null;
+            }else{
+            data.deaths = response.data.summary[i].deaths;
+            }
+            if(response.data.summary[i].cumulative_deaths == "NULL"){
+                data.total_deaths = null;
+            }else{
+            data.total_deaths = response.data.summary[i].cumulative_deaths;
+            }
+            if(response.data.summary[i].recovered == "NULL"){
+                data.recovered = null;
+            }else{
+            data.recovered = response.data.summary[i].recovered;
+            }
+            if(response.data.summary[i].cumulative_recovered == "NULL"){
+                data.total_recovered = null;
+            }else{
+            data.total_recovered = response.data.summary[i].cumulative_recovered;
+            }
+            if(response.data.summary[i].province == "NULL"){
+                data.location = null;
+            }else{
+            data.location = response.data.summary[i].province;
+            }
+            if(response.data.summary[i].avaccine == "NULL"){
+                data.vaccination_shots = null;
+            }else{
+            data.vaccination_shots = response.data.summary[i].avaccine;
+            }
+            if(response.data.summary[i].cumulative_avaccine == "NULL"){
+                data.total_vaccinations_1st = null;
+            }else{
+            data.total_vaccinations_1st = response.data.summary[i].cumulative_avaccine;
+            }
+            if(response.data.summary[i].cumulative_cvaccine == "NULL"){
+                data.completed_vaccinations = null;
+            }else{  
+            data.completed_vaccinations = response.data.summary[i].cumulative_cvaccine;
+            }
+
+            data.save();
+            } 
+    } catch (err) {
+        console.error(err);
+    }}, error => {
+            console.log(error);
+}
 
 // Adding a single data item to the database using forms (req.body).
 exports.new = function (req, res) {
@@ -71,6 +156,7 @@ exports.view = function (req, res) {
 };
 
 // Update specific data by date param.  ie. api/admin/2020-01-01 param to update is '2020-01-01'
+//NOT USED.
 exports.update = function (req, res) {
     Data.find({date: req.params.date}, function (err, data) {
             if (err) {
@@ -104,7 +190,7 @@ exports.update = function (req, res) {
         });
     };
 
-    // Delete data by date param ie. api/admin/2020-01-01 2020-01-01 = param
+// Delete data by date param ie. api/admin/2020-01-01 2020-01-01 = param
 exports.delete = function (req, res) {
     Data.remove({date: req.params.date
     }, function (err, data) {
@@ -125,13 +211,27 @@ exports.delete = function (req, res) {
 // TODO: Add delete functionality
 // TODO: Add update functionality.
 
-exports.admin = function (req, res) { 
-    res.send(`
-        <h1>Add data to the API<h1>
-        <form action="admin/api/post" enctype="multipart/form-data" method="post">
-            <div>Date: <input type="text" name="date" /></div>
-            <input type="submit" value="POST" />
-        </form>
-    `);
-};
+// exports.admin = function (req, res) { 
+//     res.send(`
+//         <h1>Add data to the API</h1>
+//         <form action="admin/post" enctype="multipart/form-data" method="post">
+//             <div>Date: <input type="text" name="date" /></div>
+//             <div>Active Cases: <input type="text" name="active_cases" /></div>
+//             <div>Change in Active: <input type="text" name="active_cases_change" /></div>
+//             <div>Cases: <input type="text" name="cases" /></div>
+//             <div>Total Cases: <input type="text" name="total_cases" /></div>
+//             <div>Deaths: <input type="text" name="deaths" /></div>
+//             <div>Total Deaths: <input type="text" name="total_deaths" /></div>
+//             <div>Recovered: <input type="text" name="recovered" /></div>
+//             <div>Total Recovered: <input type="text" name="total_recovered" /></div>
+//             <div>Location: <input type="text" name="location" /></div>
+//             <div>Vaccination Shots: <input type="text" name="vaccinations_shots" /></div>
+//             <div>Total 1st Shot Vaccination: <input type="text" name="total_vaccinations_1st" /></div>
+//             <div>Completed Vaccinations: <input type="text" name="completed_vaccinations" /></div>
 
+//             <div>Access Token: <textarea name="token" rows="5" cols="50"></textarea></div>
+
+//             <input type="submit" value="POST" />
+//         </form>
+//     `);
+// };

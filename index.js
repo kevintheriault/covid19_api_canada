@@ -5,6 +5,7 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 const helmet = require('helmet');
 const morgan = require('morgan');
+const data = require('./dataControl');
 
 
 require('dotenv').config();
@@ -32,7 +33,6 @@ mongoose.connect('mongodb://root:' + pw + '@mongo_api:27017', { useNewUrlParser:
 const db = mongoose.connection;
 
 // used for development
-// db.dropDatabase();
 // data.new2();
 
 // Use Api routes in the App

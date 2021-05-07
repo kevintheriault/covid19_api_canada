@@ -26,7 +26,7 @@ dataSchema.plugin(AutoIncrement);
 
 
 // Export Contact model
-const Data = module.exports = mongoose.model('data', dataSchema);
+const Data = module.exports = mongoose.model('data', dataSchema, 'covid_data');
 
 module.exports.get = function (callback, limit) {
     Data.find(callback).limit(limit);
