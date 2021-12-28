@@ -1,7 +1,7 @@
 # Covid19 API Canada
 A Covid19 data API for Canada.
 
-Running at https://api.kevintheriault.tech/api.
+Running at https://api.kevintheriault.tech/api. //server down.
 
 Can GET data by location passing it as a param ie. https://api.kevintheriault.tech/api/Canada.
 
